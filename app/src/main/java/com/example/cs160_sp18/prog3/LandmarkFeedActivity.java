@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 
 import java.util.ArrayList;
+import org.json.*;
 
 /**
  * Created by Luciano1 on 4/8/18.
@@ -32,10 +33,19 @@ public class LandmarkFeedActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.landmark_recycler);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setAdapterAndUpdateData();
+
+
     }
 
-    private void setAdapaterAndUpdateData() {
-        mAdapter = new LandmarkAdapter()
+    private void fillLandmarks() {
+
+    }
+
+    private void setAdapterAndUpdateData() {
+        mAdapter = new LandmarkAdapter(this, mLandmarks);
+        mRecyclerView.setAdapter(mAdapter);
+
     }
 
 

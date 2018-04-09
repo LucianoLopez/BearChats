@@ -19,6 +19,11 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private ArrayList<Landmark> mLandmarks;
 
+    LandmarkAdapter(Context context, ArrayList<Landmark> landmarks) {
+        mContext = context;
+        mLandmarks = landmarks;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.landmark_cell_layout, parent, false);
@@ -28,6 +33,8 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Landmark landmark = mLandmarks.get(position);
+        ((LandmarkViewHolder)holder).bind(landmark);
 
     }
     @Override
@@ -40,6 +47,7 @@ class LandmarkViewHolder extends RecyclerView.ViewHolder {
     public ImageView mLandmarkIcon;
     public TextView mLandmarkName;
     public TextView mLandmarkDistance;
+    public Landmark landmark;
 
     public LandmarkViewHolder(View itemView) {
         super(itemView);
@@ -51,6 +59,7 @@ class LandmarkViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Landmark landmark) {
+        this.landmark = landmark;
         mLandmarkIcon.setImageDrawable(landmark.icon);
         mLandmarkName.setText(landmark.name);
         mLandmarkDistance.setText(String.valueOf(landmark.distance) + " meters away");
