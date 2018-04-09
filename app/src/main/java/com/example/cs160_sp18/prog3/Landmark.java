@@ -1,5 +1,8 @@
 package com.example.cs160_sp18.prog3;
 
+import android.graphics.drawable.Drawable;
+import android.support.v7.app.AppCompatActivity;
+
 /**
  * Created by Luciano1 on 4/8/18.
  */
@@ -8,11 +11,11 @@ public class Landmark {
 
     public String name;
     public float distance;
-    public String imgName;
+    public Drawable icon;
 
-    Landmark(String name, float distance, String imgName) {
+    Landmark(String name, float distance, Drawable icon) {
         this.distance = distance;
-        this.imgName = imgName;
+        this.icon = icon;
         this.name = name;
     }
     protected void updateDistance(float newDistance) {

@@ -21,13 +21,14 @@
         android:clickable="true">
 
         <ImageView
+            android:id="@+id/landmark_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:paddingRight="10dp"
             android:src="@drawable/bell_bears"/>
 
         <TextView
-            android:id="@+id/landmark_text_view"
+            android:id="@+id/landmark_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,7 +37,7 @@
             android:textSize="20dp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/distance_text_view"
+            android:id="@+id/landmark_distance"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="right"
