@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,7 +21,7 @@ import java.util.Date;
 public class CommentFeedActivity extends AppCompatActivity {
 
     private static final String TAG = CommentFeedActivity.class.getSimpleName();
-
+    private String landmarkName;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<Comment> mComments = new ArrayList<Comment>();
@@ -32,13 +36,23 @@ public class CommentFeedActivity extends AppCompatActivity {
      * You'll need to add functionality for pulling and posting comments from Firebase
      */
 
+    protected void writeToDatabase() {
+        makeTestComments();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference chat = database.getReference(landmarkName);
+        for (Comment comment : mComments) {
+            DatabaseReference chatRef = chat.push();
+            chatRef.setValue(comment);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_feed);
 
         // TODO: replace this with the name of the landmark the user chose
-        String landmarkName = "test landmark";
+        landmarkName = "bell_bears";
 
         // sets the app bar's title
         setTitle(landmarkName + ": Posts");
@@ -57,9 +71,10 @@ public class CommentFeedActivity extends AppCompatActivity {
 
         // create an onclick for the send button
         setOnClickForSendButton();
+        writeToDatabase();
 
         // make some test comment objects that we add to the recycler view
-        makeTestComments();
+//        makeTestComments();
 
         // use the comments in mComments to create an adapter. This will populate mRecyclerView
         // with a custom cell (with comment_cell_layout) for each comment in mComments

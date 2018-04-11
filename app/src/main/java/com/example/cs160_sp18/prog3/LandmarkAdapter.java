@@ -27,7 +27,7 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.landmark_cell_layout, parent, false);
-        return new CommentViewHolder(view);
+        return new LandmarkViewHolder(view);
 
     }
 
@@ -60,7 +60,7 @@ class LandmarkViewHolder extends RecyclerView.ViewHolder {
 
     void bind(Landmark landmark, Context context) {
         this.landmark = landmark;
-        int resourceID = context.getResources().getIdentifier(landmark.fileName, "res", "com.example.cs160_sp18.prog3");
+        int resourceID = context.getResources().getIdentifier(landmark.fileName, "drawable", context.getPackageName());
         mLandmarkIcon.setImageDrawable(context.getDrawable(resourceID));
         mLandmarkName.setText(landmark.name);
         mLandmarkDistance.setText(String.valueOf(landmark.distance) + " meters away");
