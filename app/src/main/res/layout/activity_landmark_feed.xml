@@ -12,13 +12,13 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
+        android:background="@color/lightBlue"
         app:titleTextColor="@color/default_text_color"
         app:title="Landmark Chatrooms"
         app:titleMarginStart="@dimen/activity_horizontal_margin"
         android:elevation="4dp"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+        android:theme="@style/Theme.AppCompat"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
 
 

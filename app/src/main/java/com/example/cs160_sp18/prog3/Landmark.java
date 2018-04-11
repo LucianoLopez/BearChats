@@ -10,14 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 public class Landmark {
 
     public String name;
+    public Double[] coordinates;
     public float distance;
-    public Drawable icon;
+    public String fileName;
 
-    Landmark(String name, float distance, Drawable icon) {
-        this.distance = distance;
-        this.icon = icon;
+    Landmark(String name, Double[] coordinates, String fileName, float distance) {
+        this.fileName = fileName;
         this.name = name;
+        this.coordinates = coordinates;
+        this.distance = distance;
     }
+
+
     protected void updateDistance(float newDistance) {
         this.distance = newDistance;
     }
