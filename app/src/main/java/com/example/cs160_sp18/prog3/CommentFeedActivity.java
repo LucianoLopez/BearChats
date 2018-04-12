@@ -1,21 +1,31 @@
 package com.example.cs160_sp18.prog3;
 
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 // Displays a list of comments for a particular landmark.
 public class CommentFeedActivity extends AppCompatActivity {
@@ -24,7 +34,10 @@ public class CommentFeedActivity extends AppCompatActivity {
     private String landmarkName;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private ArrayList<Comment> mComments = new ArrayList<Comment>();
+    private ArrayList<Comment> mComments = new ArrayList<>();
+    private DatabaseReference dbref;
+    private boolean messageJustSent = false;
+    private Comment lastComment;
 
     // UI elements
     EditText commentInputBox;
@@ -36,14 +49,9 @@ public class CommentFeedActivity extends AppCompatActivity {
      * You'll need to add functionality for pulling and posting comments from Firebase
      */
 
-    protected void writeToDatabase() {
-        makeTestComments();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference chat = database.getReference(landmarkName);
-        for (Comment comment : mComments) {
-            DatabaseReference chatRef = chat.push();
-            chatRef.setValue(comment);
-        }
+    protected void writeToDatabase(Comment comment) {
+        DatabaseReference chatRef = dbref.push();
+        chatRef.setValue(comment);
     }
 
     @Override
@@ -68,10 +76,33 @@ public class CommentFeedActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dbref = FirebaseDatabase.getInstance().getReference(landmarkName);
+        ValueEventListener myDataListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap<String, HashMap> comments = (HashMap<String, HashMap>) dataSnapshot.getValue();
+                if (comments == null) {
+                    return;
+                }
+                mComments = parseComments(comments);
+//                if (messageJustSent) {
+//                    messageJustSent = false;
+//                    mComments.add(lastComment);
+//                }
+
+                setAdapterAndUpdateData();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("0", "cancelled");
+            }
+        };
+        dbref.addValueEventListener(myDataListener);
+
 
         // create an onclick for the send button
         setOnClickForSendButton();
-        writeToDatabase();
 
         // make some test comment objects that we add to the recycler view
 //        makeTestComments();
@@ -79,6 +110,28 @@ public class CommentFeedActivity extends AppCompatActivity {
         // use the comments in mComments to create an adapter. This will populate mRecyclerView
         // with a custom cell (with comment_cell_layout) for each comment in mComments
         setAdapterAndUpdateData();
+    }
+    private ArrayList<Comment> parseComments(HashMap<String, HashMap> hashComments) {
+        //find how many new comments there are
+        Object[] keySet = hashComments.keySet().toArray();
+        Arrays.sort(keySet);
+        ArrayList<Comment> newComments = new ArrayList<>();
+        for (int i = 0; i < hashComments.size(); i++) {
+//            Comment newComment = new Comment(text, username, date);
+            HashMap<String, Object> hashComment = hashComments.get(keySet[i]);
+//            Date date = new Date(year, month, date, hrs, min, sec);
+            HashMap<String, Long> hashDate = (HashMap) hashComment.get("date");
+            int year = hashDate.get("year").intValue();
+            int month = hashDate.get("month").intValue();
+            int date = hashDate.get("date").intValue();
+            int hrs = hashDate.get("hours").intValue();
+            int min = hashDate.get("minutes").intValue();
+            int sec = hashDate.get("seconds").intValue();
+            Date commentDate = new Date(year, month, date, hrs, min, sec);
+            Comment newComment = new Comment((String) hashComment.get("text"), (String) hashComment.get("username"), commentDate);
+            newComments.add(newComment);
+        }
+        return newComments;
     }
 
     // TODO: delete me
@@ -117,13 +170,18 @@ public class CommentFeedActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         // scroll to the last comment
-        mRecyclerView.smoothScrollToPosition(mComments.size() - 1);
+        if (mComments.size() > 0) {
+            mRecyclerView.smoothScrollToPosition(mComments.size() - 1);
+        } else {
+        mRecyclerView.smoothScrollToPosition(0);
+        }
     }
 
     private void postNewComment(String commentText) {
         Comment newComment = new Comment(commentText, "one-sixty student", new Date());
-        mComments.add(newComment);
-        setAdapterAndUpdateData();
+//        mComments.add(newComment);
+        writeToDatabase(newComment);
+//        setAdapterAndUpdateData();
     }
 
     @Override
