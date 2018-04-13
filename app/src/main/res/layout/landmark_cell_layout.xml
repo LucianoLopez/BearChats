@@ -5,11 +5,15 @@
     android:id="@+id/landmark_cell_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/customborder"
+    android:background="@color/gray"
     android:clickable="true"
     android:elevation="10dp"
     android:focusable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/landmark_ll"
@@ -18,12 +22,15 @@
         android:layout_alignParentTop="true"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/shadowborder">
 
         <ImageView
             android:id="@+id/landmark_icon"
-            android:layout_width="362dp"
-            android:layout_height="115dp"
+            android:layout_width="356dp"
+            android:layout_height="119dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="4dp"
             android:clickable="true"
             android:paddingRight="10dp"
             android:scaleType="centerCrop"
@@ -31,12 +38,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.357" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/landmark_name"
-            android:layout_width="339dp"
+            android:layout_width="334dp"
             android:layout_height="27dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="4dp"
@@ -50,7 +56,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landmark_icon" />
+            app:layout_constraintTop_toBottomOf="@+id/landmark_icon"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/landmark_distance"
