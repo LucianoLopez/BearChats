@@ -15,10 +15,7 @@
             android:name=".CommentFeedActivity"
             android:label="@string/title_activity_comment_feed"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
             <!-- makes this the first activity presented on app launch. -->
             <!-- you will want to move this intent filter to a different activity later -->
 
@@ -29,6 +26,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <!-- makes this the first activity presented on app launch. -->
             <!-- you will want to move this intent filter to a different activity later -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 

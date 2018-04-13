@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,15 +21,15 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private ArrayList<Landmark> mLandmarks;
     private LandmarkViewHolder landmark;
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), CommentFeedActivity.class);
-            intent.putExtra("landmarkName", landmark.landmark.name);
-            mContext.startActivity(intent);
-
-        }
-    };
+//    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            Intent intent = new Intent(view.getContext(), CommentFeedActivity.class);
+//            intent.putExtra("landmarkName", landmark.name);
+//            mContext.startActivity(intent);
+//
+//        }
+//    };
 
     LandmarkAdapter(Context context, ArrayList<Landmark> landmarks) {
         mContext = context;
@@ -38,7 +39,7 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.landmark_cell_layout, parent, false);
-        view.setOnClickListener(mOnClickListener);
+//        view.setOnClickListener(mOnClickListener);
         landmark = new LandmarkViewHolder(view);
         return landmark;
 
@@ -48,8 +49,19 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Landmark landmark = mLandmarks.get(position);
+        final Landmark landmark = mLandmarks.get(position);
         ((LandmarkViewHolder)holder).bind(landmark, mContext);
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), CommentFeedActivity.class);
+                intent.putExtra("landmarkName", landmark.name);
+                mContext.startActivity(intent);
+            }
+        };
+        ((LandmarkViewHolder) holder).mLandmarkLayout.setOnClickListener(listener);
+        ((LandmarkViewHolder) holder).mLandmarkName.setOnClickListener(listener);
+        ((LandmarkViewHolder) holder).mLandmarkIcon.setOnClickListener(listener);
 
     }
     @Override
@@ -57,12 +69,14 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
         return mLandmarks.size();
     }
 }
-class LandmarkViewHolder extends RecyclerView.ViewHolder {
+class LandmarkViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     public RelativeLayout mLandmarkLayout;
     public ImageView mLandmarkIcon;
     public TextView mLandmarkName;
     public TextView mLandmarkDistance;
-    public Landmark landmark;
+    public String stringName;
+    public Context mContext;
+
 
     public LandmarkViewHolder(View itemView) {
         super(itemView);
@@ -70,11 +84,22 @@ class LandmarkViewHolder extends RecyclerView.ViewHolder {
         mLandmarkIcon = mLandmarkLayout.findViewById(R.id.landmark_icon);
         mLandmarkName = mLandmarkLayout.findViewById(R.id.landmark_name);
         mLandmarkDistance = mLandmarkLayout.findViewById(R.id.landmark_distance);
+        mLandmarkLayout.setOnClickListener(this);
+        mLandmarkIcon.setOnClickListener(this);
+        mLandmarkName.setOnClickListener(this);
+        mLandmarkDistance.setOnClickListener(this);
 
+    }
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(view.getContext(), CommentFeedActivity.class);
+        intent.putExtra("landmarkName", stringName);
+        mContext.startActivity(intent);
     }
 
     void bind(Landmark landmark, Context context) {
-        this.landmark = landmark;
+        mContext = context;
+        this.stringName = landmark.name;
         int resourceID = context.getResources().getIdentifier(landmark.fileName, "drawable", context.getPackageName());
         mLandmarkIcon.setImageDrawable(context.getDrawable(resourceID));
         mLandmarkName.setText(landmark.name);

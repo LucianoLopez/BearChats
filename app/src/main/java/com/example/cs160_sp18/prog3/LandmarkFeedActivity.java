@@ -24,6 +24,7 @@ import android.widget.Toolbar;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -502,7 +503,10 @@ public class LandmarkFeedActivity extends AppCompatActivity {
         Location landmarkLoc = new Location("");
         landmarkLoc.setLatitude(coordinates[0]);
         landmarkLoc.setLongitude(coordinates[1]);
-        return mCurrentLocation.distanceTo(landmarkLoc);
+        float distance = mCurrentLocation.distanceTo(landmarkLoc);
+        BigDecimal bd = new BigDecimal(Float.toString(distance));
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 
 

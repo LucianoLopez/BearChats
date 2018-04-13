@@ -58,9 +58,10 @@ public class CommentFeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_feed);
+        Bundle extras = getIntent().getExtras();
 
         // TODO: replace this with the name of the landmark the user chose
-        landmarkName = "bell_bears";
+        landmarkName = extras.getString("landmarkName");
 
         // sets the app bar's title
         setTitle(landmarkName + ": Posts");
@@ -72,6 +73,7 @@ public class CommentFeedActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
+        mToolbar.setTitle(landmarkName + " Chatroom");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler);
         mRecyclerView.setHasFixedSize(true);
