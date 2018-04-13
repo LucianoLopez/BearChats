@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -54,9 +55,14 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), CommentFeedActivity.class);
-                intent.putExtra("landmarkName", landmark.name);
-                mContext.startActivity(intent);
+                if (landmark.distance <= 10) {
+                    Intent intent = new Intent(v.getContext(), CommentFeedActivity.class);
+                    intent.putExtra("landmarkName", landmark.name);
+                    mContext.startActivity(intent);
+                } else {
+                    Toast errorToast = Toast.makeText(mContext, "You must be within 10 meters to view this chat.", Toast.LENGTH_SHORT);
+                    errorToast.show();
+                }
             }
         };
         ((LandmarkViewHolder) holder).mLandmarkLayout.setOnClickListener(listener);
@@ -101,15 +107,17 @@ class LandmarkViewHolder extends RecyclerView.ViewHolder implements View.OnClick
         mContext = context;
         this.stringName = landmark.name;
         int resourceID = context.getResources().getIdentifier(landmark.fileName, "drawable", context.getPackageName());
+        int backgroundID = context.getResources().getIdentifier("customborder", "drawable", context.getPackageName());
         mLandmarkIcon.setImageDrawable(context.getDrawable(resourceID));
         mLandmarkName.setText(landmark.name);
-        mLandmarkDistance.setText(String.valueOf(landmark.distance) + " meters away");
+        mLandmarkDistance.setText(String.valueOf(landmark.distance) + " meters");
+        if (landmark.distance <= 10) {
+            mLandmarkLayout.setBackgroundColor(context.getResources().getColor(R.color.facebooklightblue));
+        } else {
+            mLandmarkLayout.setBackgroundColor(context.getResources().getColor(R.color.lightGray));
+        }
+//        mLandmarkLayout.setBackground(context.getDrawable(backgroundID));
     }
-
-    void updateDistance(float newDistance) {
-        mLandmarkDistance.setText(String.valueOf(newDistance) + " meters away");
-    }
-
 
 
 }

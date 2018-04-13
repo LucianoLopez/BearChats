@@ -14,8 +14,8 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        app:titleTextColor="@color/colorPrimaryDark"
+        android:background="@color/facebookblue"
+        app:titleTextColor="@color/colorPrimary"
         app:title="temp title"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -31,6 +31,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:transcriptMode="alwaysScroll"
+        android:paddingTop="50dp"
         app:stackFromEnd="true" />
 
     <RelativeLayout
@@ -64,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/facebookblue"
             android:text="send"
             android:textColor="@color/white"
             android:textSize="18sp" />

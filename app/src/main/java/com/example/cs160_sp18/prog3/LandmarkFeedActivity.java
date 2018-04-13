@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -63,7 +64,7 @@ import java.util.Locale;
  * Created by Luciano1 on 4/8/18.
  */
 
-public class LandmarkFeedActivity extends AppCompatActivity {
+public class LandmarkFeedActivity extends AppCompatActivity  {
 
     private static final String TAG = LandmarkFeedActivity.class.getSimpleName();
 
@@ -85,15 +86,16 @@ public class LandmarkFeedActivity extends AppCompatActivity {
     private Location mCurrentLocation;
     private Boolean mRequestingLocationUpdates;
 
-    private String mLatitudeLabel;
-    private String mLongitudeLabel;
-    private String mLastUpdateTimeLabel;
 
     private String mLastUpdateTime;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<Landmark> mLandmarks;
+    private Button mRefreshButton;
+    private boolean refresh = true;
+    View.OnClickListener listener;
+    int lastPosition = 0;
 
     RelativeLayout layout;
 
@@ -105,6 +107,7 @@ public class LandmarkFeedActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.landmark_recycler);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRefreshButton = layout.findViewById(R.id.refreshButton);
         mLandmarks = new ArrayList<>();
 //        setAdapterAndUpdateData();
 
@@ -116,6 +119,8 @@ public class LandmarkFeedActivity extends AppCompatActivity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
 
+        setOnClickForRefreshButton();
+
 
         createLocationCallback();
         createLocationRequest();
@@ -126,10 +131,26 @@ public class LandmarkFeedActivity extends AppCompatActivity {
 
     }
 
+    private void setOnClickForRefreshButton() {
+        mRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLandmarks = loadLandmarks();
+//                lastPosition = mRecyclerView.findContainingViewHolder(v).getAdapterPosition();
+                setAdapterAndUpdateData();
+            }
+        });
+    }
+    public void onRefreshButtonClick(View v) {
+        mLandmarks = loadLandmarks();
+        setAdapterAndUpdateData();
+    }
+
 
     private void setAdapterAndUpdateData() {
         mAdapter = new LandmarkAdapter(this, mLandmarks);
         mRecyclerView.setAdapter(mAdapter);
+//        mRecyclerView.s;
 
     }
 
@@ -234,8 +255,11 @@ public class LandmarkFeedActivity extends AppCompatActivity {
 
                 mCurrentLocation = locationResult.getLastLocation();
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-                mLandmarks = loadLandmarks();
-                setAdapterAndUpdateData();
+                if (refresh) {
+                    mLandmarks = loadLandmarks();
+                    setAdapterAndUpdateData();
+                    refresh = false;
+                }
 //                updateLocationUI();
             }
         };
@@ -367,6 +391,7 @@ public class LandmarkFeedActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+//        mRefreshButton.setOnClickListener(listener);
         // Within {@code onPause()}, we remove location updates. Here, we resume receiving
         // location updates if the user has requested them.
         if (mRequestingLocationUpdates && checkPermissions()) {
@@ -505,7 +530,7 @@ public class LandmarkFeedActivity extends AppCompatActivity {
         landmarkLoc.setLongitude(coordinates[1]);
         float distance = mCurrentLocation.distanceTo(landmarkLoc);
         BigDecimal bd = new BigDecimal(Float.toString(distance));
-        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
         return bd.floatValue();
     }
 
