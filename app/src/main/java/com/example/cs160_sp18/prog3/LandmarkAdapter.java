@@ -22,6 +22,7 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private ArrayList<Landmark> mLandmarks;
     private LandmarkViewHolder landmark;
+    private String username;
 //    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
 //        @Override
 //        public void onClick(View view) {
@@ -32,9 +33,10 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
 //        }
 //    };
 
-    LandmarkAdapter(Context context, ArrayList<Landmark> landmarks) {
+    LandmarkAdapter(Context context, ArrayList<Landmark> landmarks, String username) {
         mContext = context;
         mLandmarks = landmarks;
+        this.username = username;
     }
 
     @Override
@@ -58,6 +60,7 @@ public class LandmarkAdapter extends RecyclerView.Adapter {
                 if (landmark.distance <= 10) {
                     Intent intent = new Intent(v.getContext(), CommentFeedActivity.class);
                     intent.putExtra("landmarkName", landmark.name);
+                    intent.putExtra("username", username);
                     mContext.startActivity(intent);
                 } else {
                     Toast errorToast = Toast.makeText(mContext, "You must be within 10 meters to view this chat.", Toast.LENGTH_SHORT);
@@ -112,9 +115,12 @@ class LandmarkViewHolder extends RecyclerView.ViewHolder implements View.OnClick
         mLandmarkName.setText(landmark.name);
         mLandmarkDistance.setText(String.valueOf(landmark.distance) + " meters");
         if (landmark.distance <= 10) {
-            mLandmarkLayout.setBackgroundColor(context.getResources().getColor(R.color.facebooklightblue));
+            mLandmarkDistance.setText("Less than 10 meters away");
+            mLandmarkDistance.setTextColor(context.getResources().getColor(R.color.green));
+//            mLandmarkLayout.setBackgroundColor(context.getResources().getColor(R.color.facebooklightblue));
         } else {
-            mLandmarkLayout.setBackgroundColor(context.getResources().getColor(R.color.lightGray));
+            mLandmarkDistance.setTextColor(context.getResources().getColor(R.color.red));
+//            mLandmarkLayout.setBackgroundColor(context.getResources().getColor(R.color.lightGray));
         }
 //        mLandmarkLayout.setBackground(context.getDrawable(backgroundID));
     }

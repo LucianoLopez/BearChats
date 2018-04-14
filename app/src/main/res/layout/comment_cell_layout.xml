@@ -5,15 +5,22 @@
     android:id="@+id/comment_cell_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/customborder"
+    android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
     android:paddingBottom="@dimen/row_padding_vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/row_padding_vertical"
-    android:elevation="10dp">
+    android:paddingTop="@dimen/row_padding_vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadowborder"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp">
 
     <LinearLayout
         android:id="@+id/ll"
@@ -41,6 +48,7 @@
             android:text="4 hours ago" />
     </LinearLayout>
 
+
     <!-- comment body text -->
     <TextView
         android:id="@+id/comment_text_view"
@@ -51,4 +59,6 @@
         android:paddingTop="8dp"
         android:text="this is some text that previews what a comments text would look like"
         android:textSize="16sp" />
+
+    </RelativeLayout>
 </RelativeLayout>

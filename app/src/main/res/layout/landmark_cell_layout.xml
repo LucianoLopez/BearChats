@@ -5,7 +5,7 @@
     android:id="@+id/landmark_cell_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/gray"
+    android:background="@color/lightGray"
     android:clickable="true"
     android:elevation="10dp"
     android:focusable="true"
@@ -61,21 +61,23 @@
 
         <TextView
             android:id="@+id/landmark_distance"
-            android:layout_width="90dp"
-            android:layout_height="22dp"
+            android:layout_width="172dp"
+            android:layout_height="20dp"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
             android:gravity="right"
             android:text="super far away"
+            android:textAlignment="textEnd"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/landmark_icon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.967"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 

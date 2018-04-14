@@ -94,8 +94,7 @@ public class LandmarkFeedActivity extends AppCompatActivity  {
     private ArrayList<Landmark> mLandmarks;
     private Button mRefreshButton;
     private boolean refresh = true;
-    View.OnClickListener listener;
-    int lastPosition = 0;
+    public String username;
 
     RelativeLayout layout;
 
@@ -104,6 +103,7 @@ public class LandmarkFeedActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landmark_feed);
         layout = findViewById(R.id.landmark_layout);
+        username = getIntent().getExtras().getString("username");
         mRecyclerView = findViewById(R.id.landmark_recycler);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -148,7 +148,7 @@ public class LandmarkFeedActivity extends AppCompatActivity  {
 
 
     private void setAdapterAndUpdateData() {
-        mAdapter = new LandmarkAdapter(this, mLandmarks);
+        mAdapter = new LandmarkAdapter(this, mLandmarks, username);
         mRecyclerView.setAdapter(mAdapter);
 //        mRecyclerView.s;
 

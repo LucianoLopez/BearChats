@@ -37,7 +37,7 @@ public class CommentFeedActivity extends AppCompatActivity {
     private ArrayList<Comment> mComments = new ArrayList<>();
     private DatabaseReference dbref;
     private boolean messageJustSent = false;
-    private Comment lastComment;
+    private String username;
 
     // UI elements
     EditText commentInputBox;
@@ -62,6 +62,8 @@ public class CommentFeedActivity extends AppCompatActivity {
 
         // TODO: replace this with the name of the landmark the user chose
         landmarkName = extras.getString("landmarkName");
+        username = extras.getString("username");
+
 
         // sets the app bar's title
         setTitle(landmarkName + ": Posts");
@@ -180,7 +182,7 @@ public class CommentFeedActivity extends AppCompatActivity {
     }
 
     private void postNewComment(String commentText) {
-        Comment newComment = new Comment(commentText, "one-sixty student", new Date());
+        Comment newComment = new Comment(commentText, username, new Date());
 //        mComments.add(newComment);
         writeToDatabase(newComment);
 //        setAdapterAndUpdateData();
