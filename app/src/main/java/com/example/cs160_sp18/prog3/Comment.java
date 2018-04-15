@@ -1,6 +1,7 @@
 package com.example.cs160_sp18.prog3;
 
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 // custom class made for storing a message. you can update this class
 public class Comment {
@@ -8,11 +9,17 @@ public class Comment {
     public String text;
     public String username;
     public Date date;
+    public int votes;
+    String commentReference;
+    String landmark;
 
-    Comment(String text, String username, Date date) {
+    Comment(String text, String username, Date date, String commentReference, String landmark, int votes) {
         this.text = text;
         this.username = username;
         this.date = date;
+        this.commentReference = commentReference;
+        this.landmark = landmark;
+        this.votes = votes;
     }
 
     // returns a string indicating how long ago this post was made
@@ -25,17 +32,20 @@ public class Comment {
         int daysInt = Math.round(days);
         int hoursInt = Math.round(hours);
         int minutesInt = Math.round(minutes);
-        if (daysInt == 1) {
-            return "1 day";
-        } else if (daysInt > 1) {
-            return Integer.toString(daysInt) + " days";
-        } else if (hoursInt == 1) {
-            return "1 hour";
-        } else if (hoursInt > 1) {
-            return Integer.toString(hoursInt) + " hours";
-        } else {
-            return "less than an hour";
-        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        return formatter.format(date).toString();
+//        if (daysInt == 1) {
+//            return "1 day";
+//        } else if (daysInt > 1) {
+//            return Integer.toString(daysInt) + " days";
+//        } else if (hoursInt == 1) {
+//            return "1 hour";
+//        } else if (hoursInt > 1) {
+//            return Integer.toString(hoursInt) + " hours";
+//        } else {
+//            return "less than an hour";
+//        }
     }
 }
 

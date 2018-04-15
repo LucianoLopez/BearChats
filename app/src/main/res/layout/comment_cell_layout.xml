@@ -2,10 +2,10 @@
 
 <!-- layout file for a single cell in the comment recycler view -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/comment_cell_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
@@ -15,50 +15,81 @@
     android:paddingTop="@dimen/row_padding_vertical">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="368dp"
+        android:layout_height="117dp"
         android:background="@drawable/shadowborder"
         android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:paddingRight="5dp">
+        android:paddingRight="5dp"
+        android:paddingTop="5dp">
 
-    <LinearLayout
-        android:id="@+id/ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
-
-        <!-- username text view -->
-        <TextView
-            android:id="@+id/username_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="username"
-            android:textColor="@color/green"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-        <!-- time elapsed text view -->
-        <TextView
-            android:id="@+id/date_text_view"
+        <LinearLayout
+            android:id="@+id/ll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right"
-            android:text="4 hours ago" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
+
+            <!-- username text view -->
+            <TextView
+                android:id="@+id/username_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="username"
+                android:textColor="@color/green"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <!-- time elapsed text view -->
+            <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:text="4 hours ago" />
+        </LinearLayout>
 
 
-    <!-- comment body text -->
-    <TextView
-        android:id="@+id/comment_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ll"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:text="this is some text that previews what a comments text would look like"
-        android:textSize="16sp" />
+        <!-- comment body text -->
+        <TextView
+            android:id="@+id/comment_text_view"
+            android:layout_width="294dp"
+            android:layout_height="71dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:text="this is some text that previews what a comments text would look like"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/like_button"
+            android:layout_width="39dp"
+            android:layout_height="30dp"
+            android:layout_alignStart="@+id/ll"
+            android:layout_below="@+id/ll"
+            android:layout_marginTop="0dp"
+            android:background="@color/white"
+            app:srcCompat="@android:drawable/arrow_up_float" />
+
+        <ImageButton
+            android:id="@+id/dislike_button"
+            android:layout_width="39dp"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/ll"
+            android:layout_marginBottom="11dp"
+            android:background="@color/white"
+            app:srcCompat="@android:drawable/arrow_down_float" />
+
+        <TextView
+            android:id="@+id/votes"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dislike_button"
+            android:layout_alignStart="@+id/ll"
+            android:text="+/-"
+            android:textAlignment="center"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 </RelativeLayout>

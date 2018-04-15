@@ -1,6 +1,7 @@
 package com.example.cs160_sp18.prog3;
 
 import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,12 +41,15 @@ public class CommentFeedActivity extends AppCompatActivity {
     private DatabaseReference dbref;
     private boolean messageJustSent = false;
     private String username;
+    private ArrayList<Comment> mCommentsSorted = new ArrayList<>();
+    private boolean Sort = false;
 
     // UI elements
     EditText commentInputBox;
     RelativeLayout layout;
     Button sendButton;
     Toolbar mToolbar;
+    FloatingActionButton sortButton;
 
     /* TODO: right now mRecyclerView is using hard coded comments.
      * You'll need to add functionality for pulling and posting comments from Firebase
@@ -52,6 +58,18 @@ public class CommentFeedActivity extends AppCompatActivity {
     protected void writeToDatabase(Comment comment) {
         DatabaseReference chatRef = dbref.push();
         chatRef.setValue(comment);
+    }
+
+    protected void sortByVotes() {
+        mCommentsSorted = new ArrayList<>(mComments);
+        Collections.sort(mCommentsSorted, new Comparator<Comment>() {
+            @Override
+            public int compare(Comment comment, Comment t1) {
+
+                return Integer.valueOf(comment.votes).compareTo(Integer.valueOf(t1.votes));
+            }
+        });
+        Collections.reverse(mCommentsSorted);
     }
 
     @Override
@@ -72,6 +90,15 @@ public class CommentFeedActivity extends AppCompatActivity {
         layout = (RelativeLayout) findViewById(R.id.comment_layout);
         commentInputBox = (EditText) layout.findViewById(R.id.comment_input_edit_text);
         sendButton = (Button) layout.findViewById(R.id.send_button);
+        sortButton = layout.findViewById(R.id.sort_comment);
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Sort = !Sort;
+                setAdapterAndUpdateData();
+            }
+        });
+
 
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
@@ -131,24 +158,26 @@ public class CommentFeedActivity extends AppCompatActivity {
             int hrs = hashDate.get("hours").intValue();
             int min = hashDate.get("minutes").intValue();
             int sec = hashDate.get("seconds").intValue();
+            Long numVotes = (Long)hashComment.get("votes");
             Date commentDate = new Date(year, month, date, hrs, min, sec);
-            Comment newComment = new Comment((String) hashComment.get("text"), (String) hashComment.get("username"), commentDate);
+            Comment newComment = new Comment((String) hashComment.get("text"), (String) hashComment.get("username"), commentDate,(String) keySet[i], landmarkName,
+                    numVotes.intValue());
             newComments.add(newComment);
         }
         return newComments;
     }
 
     // TODO: delete me
-    private void makeTestComments() {
-        String randomString = "hello world hello world ";
-        Comment newComment = new Comment(randomString, "test_user1", new Date());
-        Comment hourAgoComment = new Comment(randomString + randomString, "test_user2", new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
-        Comment overHourComment = new Comment(randomString, "test_user3", new Date(System.currentTimeMillis() - (2 * 60 * 60 * 1000)));
-        Comment dayAgoComment = new Comment(randomString, "test_user4", new Date(System.currentTimeMillis() - (25 * 60 * 60 * 1000)));
-        Comment daysAgoComment = new Comment(randomString + randomString + randomString, "test_user5", new Date(System.currentTimeMillis() - (48 * 60 * 60 * 1000)));
-        mComments.add(newComment);mComments.add(hourAgoComment); mComments.add(overHourComment);mComments.add(dayAgoComment); mComments.add(daysAgoComment);
-
-    }
+//    private void makeTestComments() {
+//        String randomString = "hello world hello world ";
+//        Comment newComment = new Comment(randomString, "test_user1", new Date());
+//        Comment hourAgoComment = new Comment(randomString + randomString, "test_user2", new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
+//        Comment overHourComment = new Comment(randomString, "test_user3", new Date(System.currentTimeMillis() - (2 * 60 * 60 * 1000)));
+//        Comment dayAgoComment = new Comment(randomString, "test_user4", new Date(System.currentTimeMillis() - (25 * 60 * 60 * 1000)));
+//        Comment daysAgoComment = new Comment(randomString + randomString + randomString, "test_user5", new Date(System.currentTimeMillis() - (48 * 60 * 60 * 1000)));
+//        mComments.add(newComment);mComments.add(hourAgoComment); mComments.add(overHourComment);mComments.add(dayAgoComment); mComments.add(daysAgoComment);
+//
+//    }
 
     private void setOnClickForSendButton() {
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -170,19 +199,28 @@ public class CommentFeedActivity extends AppCompatActivity {
     private void setAdapterAndUpdateData() {
         // create a new adapter with the updated mComments array
         // this will "refresh" our recycler view
-        mAdapter = new CommentAdapter(this, mComments);
-        mRecyclerView.setAdapter(mAdapter);
-
-        // scroll to the last comment
-        if (mComments.size() > 0) {
-            mRecyclerView.smoothScrollToPosition(mComments.size() - 1);
-        } else {
-        mRecyclerView.smoothScrollToPosition(0);
+        ArrayList<Comment> list = mComments;
+        if (Sort) {
+            sortByVotes();
+            list = mCommentsSorted;
         }
+        mAdapter = new CommentAdapter(this, list);
+        mRecyclerView.setAdapter(mAdapter);
+        if (Sort) {
+            mRecyclerView.smoothScrollToPosition(0);
+        } else {
+            if (mComments.size() > 0) {
+                mRecyclerView.smoothScrollToPosition(mComments.size() - 1);
+            } else {
+                mRecyclerView.smoothScrollToPosition(0);
+            }
+        }
+        // scroll to the last comment
+
     }
 
     private void postNewComment(String commentText) {
-        Comment newComment = new Comment(commentText, username, new Date());
+        Comment newComment = new Comment(commentText, username, new Date(), null, landmarkName, 0);
 //        mComments.add(newComment);
         writeToDatabase(newComment);
 //        setAdapterAndUpdateData();
