@@ -159,6 +159,8 @@ public class LandmarkFeedActivity extends AppCompatActivity  {
         InputStream inputStream = getResources().openRawResource(R.raw.bear_statues);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
+        //fuck me up fam
+
         int ctr;
         try {
             ctr = inputStream.read();
